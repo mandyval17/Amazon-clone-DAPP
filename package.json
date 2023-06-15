@@ -1,0 +1,26 @@
+{
+  "name": "dapp-amazon",
+  "version": "1.0.0",
+  "description": "\"# Amazon-clone-DAPP\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mandyval17/Amazon-clone-DAPP.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mandyval17/Amazon-clone-DAPP/issues"
+  },
+  "homepage": "https://github.com/mandyval17/Amazon-clone-DAPP#readme",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "hardhat": "^2.15.0"
+  },
+  "dependencies": {
+    "chai": "^4.3.7"
+  }
+}
