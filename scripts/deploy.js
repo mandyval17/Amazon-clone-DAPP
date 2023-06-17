@@ -4,25 +4,43 @@
 // You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
-const hre = require("hardhat");
+const hre = require("hardhat")
+const { items } = require("../public/src/items.json")
+const { ethers } = require('hardhat');
+
+const tokens = (n) => {
+  return ethers.utils.parseUnits(n.toString(), 'ether')
+}
+
+console.log(tokens(0.25))
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+  // Setup accounts
+  const [deployer] = await ethers.getSigners()
 
-  const lockedAmount = hre.ethers.parseEther("0.001");
+  // Deploy Dappazon
+  const Dappazon = await hre.ethers.getContractFactory("Dappazon")
+  const dappazon = await Dappazon.deploy()
+  await dappazon.deployed()
 
-  const lock = await hre.ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
-  });
+  console.log(`Deployed Dappazon Contract at: ${dappazon.address}\n`)
 
-  await lock.waitForDeployment();
+  // Listing items...
+  for (let i = 0; i < items.length; i++) {
+    const transaction = await dappazon.connect(deployer).list(
+      items[i].id,
+      items[i].name,
+      items[i].category,
+      items[i].image,
+      tokens(items[i].price),
+      items[i].rating,
+      items[i].stock,
+    )
 
-  console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
-  );
+    await transaction.wait()
+
+    console.log(`Listed item ${items[i].id}: ${items[i].name}`)
+  }
 }
 
 // We recommend this pattern to be able to use async/await everywhere
